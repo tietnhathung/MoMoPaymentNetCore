@@ -9,11 +9,11 @@ namespace WebApp.Controllers
     [ApiController]
     public class InstantPaymentNotificationController : ControllerBase
     {
-        private readonly IMomoService _momoService;
+        private readonly IMoMoService _momoService;
         
         
         // POST: api/Callback
-        public InstantPaymentNotificationController(IMomoService momoService)
+        public InstantPaymentNotificationController(IMoMoService momoService)
         {
             _momoService = momoService;
         }

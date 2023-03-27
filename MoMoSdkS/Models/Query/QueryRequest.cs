@@ -11,7 +11,7 @@ public class QueryRequest
     public string Signature { get; set; }
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public MoMoLang Lang { get; set; }
+    public MomoLang Lang { get; set; }
 }
 // {
 //     "partnerCode": "123456",

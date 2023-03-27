@@ -4,7 +4,7 @@ using MoMoSdk.Utils;
 
 namespace MomoSdk;
 
-public static class MomoSdkCollectionExtensions
+public static class MoMoSdkCollectionExtensions
 {
     public static void AddMomoSdk(this IServiceCollection services)
     {

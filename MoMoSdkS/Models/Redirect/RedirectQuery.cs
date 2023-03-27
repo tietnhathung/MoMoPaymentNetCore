@@ -11,7 +11,7 @@ public class RedirectQuery
     public string OrderInfo { set; get; }
     public string OrderType { set; get; }
     public long TransId { set; get; }
-    public MoMoResultCode ResultCode { set; get; }
+    public MomoResultCode ResultCode { set; get; }
     public string Message { set; get; }
     public string PayType { set; get; }
     public long ResponseTime { set; get; }

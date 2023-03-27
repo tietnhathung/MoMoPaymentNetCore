@@ -11,9 +11,9 @@ namespace WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IMomoService _momoService;
+        private readonly IMoMoService _momoService;
 
-        public HomeController(ILogger<HomeController> logger,IMomoService momoService)
+        public HomeController(ILogger<HomeController> logger,IMoMoService momoService)
         {
             _logger = logger;
             _momoService = momoService;
@@ -34,7 +34,7 @@ namespace WebApp.Controllers
                 OrderId = orderGuiId.ToString(),
                 OrderInfo = "Mua tivi",
                 Amount = amount,
-                RequestType = MomoRequestType.captureWallet
+                RequestType = MoMoRequestType.captureWallet
             };
             return View(viewModel);
         }
@@ -43,7 +43,7 @@ namespace WebApp.Controllers
         {
             
             PaymentResponse paymentResponse = await _momoService.CreatePayment( model.RequestType,model.Amount,model.OrderId,model.OrderInfo,null,null,model.DeliveryInfo,model.UserInfo);
-            if ( paymentResponse.ResultCode == MomoResultCode.Successful)
+            if ( paymentResponse.ResultCode == MoMoResultCode.Successful)
             {
                 return Redirect(paymentResponse.PayUrl);
             }

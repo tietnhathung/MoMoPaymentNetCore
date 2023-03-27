@@ -1,10 +1,10 @@
 
-using MomoSdk;
+using MoMoSdk;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddMomoSdk();
+builder.Services.AddMoMoSdk();
 
 var app = builder.Build();
 

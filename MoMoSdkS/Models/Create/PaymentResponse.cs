@@ -10,7 +10,7 @@ public class PaymentResponse
     public long Amount { get; set; }
     public long ResponseTime { get; set; }
     public string Message { get; set; }
-    public MoMoResultCode ResultCode { get; set; }
+    public MomoResultCode ResultCode { get; set; }
     public string PayUrl { get; set; }
     public string Deeplink { get; set; }
     public string QrCodeUrl { get; set; }

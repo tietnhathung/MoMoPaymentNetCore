@@ -18,7 +18,7 @@ public class PaymentRequest
     public string IpnUrl { get; set; }
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public MoMoRequestType RequestType { get; set; }
+    public MomoRequestType RequestType { get; set; }
     public string ExtraData { get; set; }
     public List<Item>? Items { get; set; }
     public DeliveryInfo? DeliveryInfo { get; set; }
@@ -26,7 +26,7 @@ public class PaymentRequest
     public bool? AutoCapture { get; set; }
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public MoMoLang Lang { get; set; }
+    public MomoLang Lang { get; set; }
     public string Signature { get; set; }
 }
 // {

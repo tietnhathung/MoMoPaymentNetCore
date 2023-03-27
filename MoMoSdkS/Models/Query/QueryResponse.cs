@@ -11,7 +11,7 @@ public class QueryResponse
     public long Amount { get; set; }
     public long TransId { get; set; }
     public string PayType { get; set; }
-    public MoMoResultCode ResultCode { get; set; }
+    public MomoResultCode ResultCode { get; set; }
     public List<RefundTrans> RefundTrans { get; set; }
     public string Message { get; set; }
     public long ResponseTime { get; set; }
