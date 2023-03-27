@@ -2,5 +2,10 @@
 
 public enum MoMoPayType
 {
-    credit,napas,webApp, app,qr, miniapp
+    credit,
+    napas,
+    webApp,
+    app,
+    qr,
+    miniapp
 }
