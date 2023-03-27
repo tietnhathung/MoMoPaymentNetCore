@@ -17,7 +17,7 @@ namespace WebApp.Controllers
         {
             if (_momoService.CheckRedirectUrl(query))
             {
-                return View(); 
+                return View(query); 
             }
 
             throw new Exception("Wrong Signature from MoMo Server");

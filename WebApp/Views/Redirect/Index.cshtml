@@ -1,6 +1,19 @@
-﻿@{
+﻿@using MoMoSdk.Enums
+@model MoMoSdk.Models.Redirect.RedirectQuery;
+@{
     ViewData["Title"] = "Redirect";
+    var orderGuiId = Guid.NewGuid();
 }
 <h1>@ViewData["Title"]</h1>
 
 <p>Redirect page.</p>
+<ul>
+    <li>TransId: @Model.TransId</li>
+    <li>ResultCode: @Model.ResultCode</li>
+    <li>Amount: @Model.Amount</li>
+    <li>OrderType: @Model.OrderType</li>
+    <li>OrderInfo: @Model.OrderInfo</li>
+    <li>OrderId: @Model.OrderId</li>
+    <li>ResponseTime: @Model.ResponseTime</li>
+    <li>Message: @Model.Message</li>
+</ul>

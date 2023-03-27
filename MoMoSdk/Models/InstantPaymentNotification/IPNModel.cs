@@ -1,4 +1,5 @@
-﻿using MoMoSdk.Enums;
+﻿using System.Text.Json.Serialization;
+using MoMoSdk.Enums;
 
 namespace MoMoSdk.Models.InstantPaymentNotification;
 
@@ -9,14 +10,20 @@ public class IPNModel
     public string RequestId { set; get; }
     public long Amount { set; get; }
     public string OrderInfo { set; get; }
-    public string OrderType { set; get; }
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public MoMoOrderType OrderType { set; get; }
     public long TransId { set; get; }
     public MoMoResultCode ResultCode { set; get; }
     public string Message { set; get; }
     public string PayType { set; get; }
     public long ResponseTime { set; get; }
     public string ExtraData { set; get; }
+    
+    public List<IPNItem> Items {set; get;}
     public string Signature { set; get; }
+    
+    
 }
 
 // {"partnerCode":"MOMOIOLD20190129","orderId":"01234567890123451633504872421","requestId":"01234567890123451633504872421","amount":1000,

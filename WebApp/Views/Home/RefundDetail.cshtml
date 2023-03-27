@@ -1,0 +1,17 @@
+﻿@model MoMoSdk.Models.Refund.RefundResponse
+
+@{
+    ViewData["Title"] = "Refund detail";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Refund</h1>
+    <ul>
+        <li>ResponseTime: @Model.ResponseTime</li>
+        <li>Amount: @Model.Amount</li>
+        <li>Message: @Model.Message</li>
+        <li>OrderId: @Model.OrderId</li>
+        <li>RequestId: @Model.RequestId</li>
+        <li>TransId: @Model.TransId</li>
+    </ul>
+</div>

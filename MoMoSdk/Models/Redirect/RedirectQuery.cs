@@ -9,7 +9,7 @@ public class RedirectQuery
     public string RequestId { set; get; }
     public long Amount { set; get; }
     public string OrderInfo { set; get; }
-    public string OrderType { set; get; }
+    public MoMoOrderType OrderType { set; get; }
     public long TransId { set; get; }
     public MoMoResultCode ResultCode { set; get; }
     public string Message { set; get; }

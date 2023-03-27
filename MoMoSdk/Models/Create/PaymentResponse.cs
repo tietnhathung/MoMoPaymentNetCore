@@ -1,16 +1,11 @@
 ﻿using MoMoSdk.Enums;
+using MoMoSdk.Models.Create;
 
 namespace MoMoSdk.Models;
 
-public class PaymentResponse
+public class PaymentResponse:MoMoResponse
 {
-    public string PartnerCode { get; set; }
-    public string OrderId { get; set; }
-    public string RequestId { get; set; }
     public long Amount { get; set; }
-    public long ResponseTime { get; set; }
-    public string Message { get; set; }
-    public MoMoResultCode ResultCode { get; set; }
     public string PayUrl { get; set; }
     public string Deeplink { get; set; }
     public string QrCodeUrl { get; set; }

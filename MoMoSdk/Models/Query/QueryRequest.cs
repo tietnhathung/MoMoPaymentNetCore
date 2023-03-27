@@ -3,15 +3,9 @@ using MoMoSdk.Enums;
 
 namespace MoMoSdk.Models.Query;
 
-public class QueryRequest
+public class QueryRequest:MoMoRequest
 {
-    public string PartnerCode { get; set; }
-    public string RequestId { get; set; }
-    public string OrderId { get; set; }
-    public string Signature { get; set; }
-    
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public MoMoLang Lang { get; set; }
+   
 }
 // {
 //     "partnerCode": "123456",

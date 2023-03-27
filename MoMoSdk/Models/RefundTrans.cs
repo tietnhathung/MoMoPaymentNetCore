@@ -1,10 +1,12 @@
-﻿namespace MoMoSdk.Models;
+﻿using MoMoSdk.Enums;
+
+namespace MoMoSdk.Models;
 
 public class RefundTrans
 {
     public string OrderId { set; get; }
-    public string Amount { set; get; }
-    public string ResultCode { set; get; }
-    public string TransId { set; get; }
-    public string CreatedTime { set; get; }
+    public long Amount { set; get; }
+    public MoMoResultCode ResultCode { set; get; }
+    public long TransId { set; get; }
+    public long CreatedTime { set; get; }
 }

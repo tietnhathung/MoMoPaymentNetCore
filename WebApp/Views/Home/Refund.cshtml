@@ -1,0 +1,22 @@
+﻿@model RefundViewModel;
+
+@{
+    ViewData["Title"] = "Refund";
+}
+
+<h2>Form Refund</h2>
+<form asp-action="RefundDetail" asp-controller="Home">
+    <label>
+        OrderId <input asp-for="OrderId"/>
+    </label><br/>
+    <label>
+        Amount <input asp-for="Amount"/>
+    </label><br/>
+    <label>
+        TransId <input asp-for="TransId"/>
+    </label><br/>
+    <label>
+        Description <input asp-for="Description"/>
+    </label><br/>
+    <button type="submit">Submit</button>
+</form>

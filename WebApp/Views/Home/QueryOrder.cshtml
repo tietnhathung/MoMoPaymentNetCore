@@ -20,4 +20,19 @@
     <li>PayType: @Model.PayType</li>
     <li>TransId: @Model.TransId</li>
     <li>ResultCode: @Model.ResultCode</li>
+    @if (Model.RefundTrans != null)
+    {
+        <li>Refund:
+            <ul>
+                @foreach (var refund in Model.RefundTrans)
+                {
+                    <li>Amount: @refund.Amount</li>
+                    <li>ResultCode: @refund.ResultCode</li>
+                    <li>ResultCode: @refund.CreatedTime</li>
+                    <li>OrderId: @refund.OrderId</li>
+                    <li>TransId: @refund.TransId</li>
+                }
+            </ul>
+        </li>
+    }
 </ol>

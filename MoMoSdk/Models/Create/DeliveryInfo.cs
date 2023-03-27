@@ -1,4 +1,4 @@
-﻿namespace MoMoSdk.Models;
+﻿namespace MoMoSdk.Models.Create;
 
 public class DeliveryInfo
 {

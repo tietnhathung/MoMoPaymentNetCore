@@ -1,17 +1,13 @@
 ﻿using System.Text.Json.Serialization;
 using MoMoSdk.Enums;
 
-namespace MoMoSdk.Models;
+namespace MoMoSdk.Models.Create;
 
-public class PaymentRequest
+public class PaymentRequest:MoMoRequest
 {
-    public string PartnerCode { get; set; }
-    public string? SubPartnerCode { get; set; }
     public string? PartnerName { get; set; }
     public string? StoreId { get; set; }
-    public string RequestId { get; set; }
     public long Amount { get; set; }
-    public string OrderId { get; set; }
     public string OrderInfo { get; set; }
     public long? OrderGroupId { get; set; }
     public string RedirectUrl { get; set; }
@@ -24,10 +20,6 @@ public class PaymentRequest
     public DeliveryInfo? DeliveryInfo { get; set; }
     public UserInfo? UserInfo { get; set; }
     public bool? AutoCapture { get; set; }
-    
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public MoMoLang Lang { get; set; }
-    public string Signature { get; set; }
 }
 // {
 //     "partnerCode": "MOMO",

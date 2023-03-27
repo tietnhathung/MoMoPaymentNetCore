@@ -1,17 +1,23 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MoMoSdk.Enums;
 using MoMoSdk.Models;
+using MoMoSdk.Models.Create;
 using MoMoSdk.Models.InstantPaymentNotification;
 using MoMoSdk.Models.Query;
+using MoMoSdk.Models.QueryRefund;
 using MoMoSdk.Models.Redirect;
+using MoMoSdk.Models.Refund;
 using MoMoSdk.Utils;
 
 namespace MoMoSdk.Services;
 
 public interface IMoMoService
 {
-    Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,long amount,string orderId,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo);
+    Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo);
     Task<QueryResponse> QueryPayment(string orderId);
+    Task<RefundResponse> CreateRefund(string orderId,long amount,long transId,string? description);
+    
+    Task<QueryRefundResponse> QueryRefund(string orderId);
     bool CheckRedirectUrl(RedirectQuery query);
     bool CheckIPN(IPNModel query);
 }
@@ -23,6 +29,8 @@ public class MoMoService : IMoMoService
 
     private const string CreateUrl = "/v2/gateway/api/create";
     private const string QueryUrl = "/v2/gateway/api/query";
+    private const string RefundUrl = "/v2/gateway/api/refund";
+    private const string QueryRefundUrl = "/v2/gateway/api/refund/query";
 
     public MoMoService(IConfiguration configuration, IMoMoHttpClient httpClient)
     {
@@ -30,7 +38,7 @@ public class MoMoService : IMoMoService
         _configuration = configuration.GetSection("MoMoPayment");
     }
 
-    private PaymentRequest CreatePaymentRequest(MoMoRequestType requestType,long amount,string orderId,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo)
+    private PaymentRequest CreatePaymentRequest(MoMoRequestType requestType,string orderId,long amount,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo)
     {
         var partnerCode = _configuration["PartnerCode"] ?? "";
         var partnerName = _configuration["PartnerName"] ?? "";
@@ -62,9 +70,9 @@ public class MoMoService : IMoMoService
         return request;
     }
 
-    public async Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,long amount,string orderId,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo)
+    public async Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo)
     {
-        var paymentRequest = CreatePaymentRequest(requestType,amount,  orderId,  orderInfo, orderGroupId, items, deliveryInfo, userInfo);
+        var paymentRequest = CreatePaymentRequest(requestType,  orderId, amount, orderInfo, orderGroupId, items, deliveryInfo, userInfo);
         var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,paymentRequest);
         return paymentResponse;
     }
@@ -85,6 +93,45 @@ public class MoMoService : IMoMoService
         var signatureString = $"accessKey={accessKey}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}";
         request.Signature = HmacHelper.Compute(secretKey,signatureString);
         var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
+        return paymentResponse;
+    }
+
+    public async Task<RefundResponse> CreateRefund(string orderId, long amount, long transId, string? description)
+    {
+        var requestGuiId = Guid.NewGuid();
+        var secretKey = _configuration["SecretKey"] ?? "";
+        var partnerCode = _configuration["PartnerCode"] ?? "";
+        var accessKey = _configuration["AccessKey"] ?? "";
+        RefundRequest request = new RefundRequest();
+        request.PartnerCode = partnerCode;
+        request.OrderId = orderId;
+        request.RequestId = requestGuiId.ToString();
+        request.Amount = amount;
+        request.TransId = transId;
+        request.Lang = MoMoLang.vi;
+        request.Description = description ?? "";
+        var signatureString = $"accessKey={accessKey}&amount={request.Amount}&description={request.Description}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}&transId={request.TransId}";
+        request.Signature = HmacHelper.Compute(secretKey,signatureString);
+        var paymentResponse = await _httpClient.Post<RefundResponse>(RefundUrl,request);
+        return paymentResponse;
+    }
+
+    public async Task<QueryRefundResponse> QueryRefund(string orderId)
+    {
+        var requestGuiId = Guid.NewGuid();
+        var secretKey = _configuration["SecretKey"] ?? "";
+        var partnerCode = _configuration["PartnerCode"] ?? "";
+        var accessKey = _configuration["AccessKey"] ?? "";
+        var request = new QueryRefundRequest()
+        {
+            OrderId = orderId,
+            PartnerCode = partnerCode,
+            Lang = MoMoLang.vi,
+            RequestId = requestGuiId.ToString()
+        };
+        var signatureString = $"accessKey={accessKey}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}";
+        request.Signature = HmacHelper.Compute(secretKey,signatureString);
+        var paymentResponse = await _httpClient.Post<QueryRefundResponse>(QueryRefundUrl,request);
         return paymentResponse;
     }
 
