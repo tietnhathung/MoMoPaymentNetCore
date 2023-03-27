@@ -1,6 +1,6 @@
-﻿using MomoSdk.Enums;
+﻿using MoMoSdk.Enums;
 
-namespace MomoSdk.Models.InstantPaymentNotification;
+namespace MoMoSdk.Models.InstantPaymentNotification;
 
 public class IPNModel
 {

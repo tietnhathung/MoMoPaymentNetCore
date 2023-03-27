@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using MomoSdk.Services;
-using MomoSdk.Utils;
+using MoMoSdk.Services;
+using MoMoSdk.Utils;
 
 namespace MomoSdk;
 

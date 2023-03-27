@@ -1,4 +1,4 @@
-﻿namespace MomoSdk.Enums;
+﻿namespace MoMoSdk.Enums;
 
 public enum MomoRequestType
 {

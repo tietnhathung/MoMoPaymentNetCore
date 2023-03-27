@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using MomoSdk.Enums;
-using MomoSdk.Models;
-using MomoSdk.Models.Query;
-using MomoSdk.Services;
+using MoMoSdk.Enums;
+using MoMoSdk.Models;
+using MoMoSdk.Models.Query;
+using MoMoSdk.Services;
 using WebApp.Models;
 
 namespace WebApp.Controllers

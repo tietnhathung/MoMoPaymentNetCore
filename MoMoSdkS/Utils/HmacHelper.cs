@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace MomoSdk.Utils;
+namespace MoMoSdk.Utils;
 
 public static class HmacHelper
 {

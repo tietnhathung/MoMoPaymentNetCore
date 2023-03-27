@@ -1,6 +1,6 @@
-﻿using MomoSdk.Enums;
+﻿using MoMoSdk.Enums;
 
-namespace MomoSdk.Models.Redirect;
+namespace MoMoSdk.Models.Redirect;
 
 public class RedirectQuery
 {

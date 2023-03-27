@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
-using MomoSdk.Models.InstantPaymentNotification;
-using MomoSdk.Services;
+using MoMoSdk.Models.InstantPaymentNotification;
+using MoMoSdk.Services;
 
 namespace WebApp.Controllers
 {

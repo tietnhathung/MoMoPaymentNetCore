@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using MomoSdk.Enums;
+using MoMoSdk.Enums;
 
-namespace MomoSdk.Models;
+namespace MoMoSdk.Models;
 
 public class PaymentRequest
 {

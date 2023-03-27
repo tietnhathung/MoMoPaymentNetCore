@@ -1,6 +1,6 @@
-﻿using MomoSdk.Enums;
+﻿using MoMoSdk.Enums;
 
-namespace MomoSdk.Models.Query;
+namespace MoMoSdk.Models.Query;
 
 public class QueryResponse
 {

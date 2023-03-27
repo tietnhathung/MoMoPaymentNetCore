@@ -4,7 +4,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace MomoSdk.Utils;
+namespace MoMoSdk.Utils;
 
 public interface IMomoHttpClient
 {

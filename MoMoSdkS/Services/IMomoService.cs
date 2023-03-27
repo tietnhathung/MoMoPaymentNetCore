@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MomoSdk.Enums;
-using MomoSdk.Models;
-using MomoSdk.Models.InstantPaymentNotification;
-using MomoSdk.Models.Query;
-using MomoSdk.Models.Redirect;
-using MomoSdk.Utils;
+using MoMoSdk.Enums;
+using MoMoSdk.Models;
+using MoMoSdk.Models.InstantPaymentNotification;
+using MoMoSdk.Models.Query;
+using MoMoSdk.Models.Redirect;
+using MoMoSdk.Utils;
 
-namespace MomoSdk.Services;
+namespace MoMoSdk.Services;
 
 public interface IMomoService
 {

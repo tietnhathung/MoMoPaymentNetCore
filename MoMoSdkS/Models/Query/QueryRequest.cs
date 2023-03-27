@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using MomoSdk.Enums;
+using MoMoSdk.Enums;
 
-namespace MomoSdk.Models.Query;
+namespace MoMoSdk.Models.Query;
 
 public class QueryRequest
 {
