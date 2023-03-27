@@ -3,21 +3,16 @@ using MoMoSdk.Enums;
 
 namespace MoMoSdk.Models.InstantPaymentNotification;
 
-public class IPNModel
+public class IPNModel:MoMoResponse
 {
-    public string PartnerCode { set; get; }
-    public string OrderId { set; get; }
-    public string RequestId { set; get; }
     public long Amount { set; get; }
     public string OrderInfo { set; get; }
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public MoMoOrderType OrderType { set; get; }
     public long TransId { set; get; }
-    public MoMoResultCode ResultCode { set; get; }
-    public string Message { set; get; }
-    public string PayType { set; get; }
-    public long ResponseTime { set; get; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public MoMoPayType PayType { set; get; }
     public string ExtraData { set; get; }
     
     public List<IPNItem> Items {set; get;}

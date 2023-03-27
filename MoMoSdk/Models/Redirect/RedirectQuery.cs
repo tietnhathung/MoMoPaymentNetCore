@@ -1,4 +1,5 @@
-﻿using MoMoSdk.Enums;
+﻿using System.Text.Json.Serialization;
+using MoMoSdk.Enums;
 
 namespace MoMoSdk.Models.Redirect;
 
@@ -13,7 +14,8 @@ public class RedirectQuery
     public long TransId { set; get; }
     public MoMoResultCode ResultCode { set; get; }
     public string Message { set; get; }
-    public string PayType { set; get; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public MoMoPayType PayType { set; get; }
     public long ResponseTime { set; get; }
     public string ExtraData { set; get; }
     public string Signature { set; get; }
