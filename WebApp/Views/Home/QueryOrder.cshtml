@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model MomoSdk.Models.Query.QueryResponse
+@{
+    ViewData["Title"] = "Query Order";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form method="get">
+    <h2>Form thanh toán</h2>
+    <label>
+        OrderId <input name="orderId" />
+    </label>
+    <button type="submit">Submit</button>
+</form>
+<ol>
+    <li>Message: @Model.Message</li>
+    <li>Amount: @Model.Amount</li>
+    <li>ExtraData: @Model.ExtraData</li>
+    <li>OrderId: @Model.OrderId</li>
+    <li>PayType: @Model.PayType</li>
+    <li>TransId: @Model.TransId</li>
+    <li>ResultCode: @Model.ResultCode</li>
+</ol>

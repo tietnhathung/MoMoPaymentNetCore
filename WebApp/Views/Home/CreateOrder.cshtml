@@ -1,0 +1,53 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using MomoSdk.Enums
+@using MomoSdk.Models
+@model WebApp.Models.CreateOrderViewModel;
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" asp-action="CreateOrder">
+    <h2>Form thanh toán</h2>
+    <label>
+        OrderId <input asp-for="OrderId"/>
+    </label>
+    <label>
+        OrderInfo <input asp-for="OrderInfo"/>
+    </label>
+    <label>
+        Amount <input asp-for="Amount"/>
+    </label>
+    <label>
+        RequestType
+        <select asp-for="RequestType">
+            <option value="@MomoRequestType.captureWallet">@MomoRequestType.captureWallet</option>
+            <option value="@MomoRequestType.payWithATM">@MomoRequestType.payWithATM</option>
+            <option value="@MomoRequestType.payWithCC">@MomoRequestType.payWithCC</option>
+            <option value="@MomoRequestType.linkWallet">@MomoRequestType.linkWallet</option>
+        </select>
+    </label>
+    <div>
+        <label>
+            Delivery Address <input asp-for="DeliveryInfo.DeliveryAddress"/>
+        </label>
+        <label>
+            Delivery Fee <input asp-for="DeliveryInfo.DeliveryFee"/>
+        </label>
+        <label>
+            Quantity <input asp-for="DeliveryInfo.Quantity"/>
+        </label>
+    </div>
+    <div>
+        <label>
+            UserInfo.Name <input asp-for="UserInfo.Name"/>
+        </label>
+        <label>
+            UserInfo.Email <input asp-for="UserInfo.Email"/>
+        </label>
+        <label>
+            UserInfo.PhoneNumber <input asp-for="UserInfo.PhoneNumber"/>
+        </label>
+    </div>
+    <button type="submit">Submit</button>
+</form>
