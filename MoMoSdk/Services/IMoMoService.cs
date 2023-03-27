@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MoMoSdk.Enums;
 using MoMoSdk.Models;
+using MoMoSdk.Models.Confirm;
 using MoMoSdk.Models.Create;
 using MoMoSdk.Models.InstantPaymentNotification;
 using MoMoSdk.Models.Query;
@@ -15,6 +16,8 @@ public interface IMoMoService
 {
     Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo);
     Task<QueryResponse> QueryPayment(string orderId);
+    
+    Task<ConfirmResponse> ConfirmPayment(string orderId,ConfirmRequestType requestType,long amount,string? description);
     Task<RefundResponse> CreateRefund(string orderId,long amount,long transId,string? description);
     
     Task<QueryRefundResponse> QueryRefund(string orderId);
@@ -29,6 +32,7 @@ public class MoMoService : IMoMoService
 
     private const string CreateUrl = "/v2/gateway/api/create";
     private const string QueryUrl = "/v2/gateway/api/query";
+    private const string ConfirmUrl = "/v2/gateway/api/confirm";
     private const string RefundUrl = "/v2/gateway/api/refund";
     private const string QueryRefundUrl = "/v2/gateway/api/refund/query";
 
@@ -94,6 +98,28 @@ public class MoMoService : IMoMoService
         request.Signature = HmacHelper.Compute(secretKey,signatureString);
         var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
         return paymentResponse;
+    }
+
+    public async Task<ConfirmResponse> ConfirmPayment(string orderId, ConfirmRequestType requestType, long amount,string? description)
+    {
+        var requestGuiId = Guid.NewGuid();
+        var secretKey = _configuration["SecretKey"] ?? "";
+        var partnerCode = _configuration["PartnerCode"] ?? "";
+        var accessKey = _configuration["AccessKey"] ?? "";
+        ConfirmRequest request = new ConfirmRequest()
+        {
+            PartnerCode = partnerCode,
+            OrderId = orderId,
+            RequestType = requestType,
+            RequestId =  requestGuiId.ToString(),
+            Amount = amount,
+            Lang = MoMoLang.vi,
+            Description = description ?? ""
+        };
+        var signatureString = $"accessKey={accessKey}&amount={request.Amount}&description={request.Description}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}&requestType={request.RequestType}";
+        request.Signature = HmacHelper.Compute(secretKey,signatureString);
+        var confirmResponse = await _httpClient.Post<ConfirmResponse>(ConfirmUrl,request);
+        return confirmResponse;
     }
 
     public async Task<RefundResponse> CreateRefund(string orderId, long amount, long transId, string? description)
