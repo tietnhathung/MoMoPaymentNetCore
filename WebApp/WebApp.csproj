@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MoMoSdkS\MoMoSdkS.csproj" />
+    <ProjectReference Include="..\MoMoSdk\MoMoSdk.csproj" />
   </ItemGroup>
 
   <ItemGroup>
