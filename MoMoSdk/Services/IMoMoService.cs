@@ -14,14 +14,19 @@ namespace MoMoSdk.Services;
 
 public interface IMoMoService
 {
+    Task<PaymentResponse> CreatePayment(PaymentRequest request);
     Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo);
     Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,string extraData,List<Item> items,DeliveryInfo deliveryInfo,UserInfo userInfo);
     Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,string? extraData,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo,long? orderGroupId);
+    Task<QueryResponse> QueryPayment(QueryRequest request);
     Task<QueryResponse> QueryPayment(string orderId);
     
+    Task<ConfirmResponse> ConfirmPayment(ConfirmRequest request);
     Task<ConfirmResponse> ConfirmPayment(string orderId,ConfirmRequestType requestType,long amount,string? description);
+    Task<RefundResponse> CreateRefund(RefundRequest request);
     Task<RefundResponse> CreateRefund(string orderId,long amount,long transId,string? description);
     
+    Task<QueryRefundResponse> QueryRefund(QueryRefundRequest request);
     Task<QueryRefundResponse> QueryRefund(string orderId);
     bool CheckRedirectUrl(RedirectQuery query);
     bool CheckIPN(IPNModel query);
@@ -42,6 +47,12 @@ public class MoMoService : IMoMoService
     {
         _httpClient = httpClient;
         _configuration = configuration.GetSection("MoMoPayment");
+    }
+
+    public async Task<PaymentResponse> CreatePayment(PaymentRequest request)
+    {
+        var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,request);
+        return paymentResponse;
     }
 
     public Task<PaymentResponse> CreatePayment(MoMoRequestType requestType, string orderId, long amount, string orderInfo)
@@ -85,7 +96,12 @@ public class MoMoService : IMoMoService
         };
         var signatureString = $"accessKey={accessKey}&amount={request.Amount}&extraData={request.ExtraData}&ipnUrl={request.IpnUrl}&orderId={request.OrderId}&orderInfo={request.OrderInfo}&partnerCode={request.PartnerCode}&redirectUrl={request.RedirectUrl}&requestId={request.RequestId}&requestType={request.RequestType}";
         request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
-        var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,request);
+        return await CreatePayment(request);
+    }
+
+    public async Task<QueryResponse> QueryPayment(QueryRequest request)
+    {
+        var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
         return paymentResponse;
     }
 
@@ -104,8 +120,13 @@ public class MoMoService : IMoMoService
         };
         var signatureString = $"accessKey={accessKey}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}";
         request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
-        var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
-        return paymentResponse;
+        return await QueryPayment(request);
+    }
+
+    public async Task<ConfirmResponse> ConfirmPayment(ConfirmRequest request)
+    {
+        var confirmResponse = await _httpClient.Post<ConfirmResponse>(ConfirmUrl,request);
+        return confirmResponse;
     }
 
     public async Task<ConfirmResponse> ConfirmPayment(string orderId, ConfirmRequestType requestType, long amount,string? description)
@@ -126,8 +147,13 @@ public class MoMoService : IMoMoService
         };
         var signatureString = $"accessKey={accessKey}&amount={request.Amount}&description={request.Description}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}&requestType={request.RequestType}";
         request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
-        var confirmResponse = await _httpClient.Post<ConfirmResponse>(ConfirmUrl,request);
-        return confirmResponse;
+        return await ConfirmPayment(request);
+    }
+
+    public async Task<RefundResponse> CreateRefund(RefundRequest request)
+    {
+        var paymentResponse = await _httpClient.Post<RefundResponse>(RefundUrl,request);
+        return paymentResponse;
     }
 
     public async Task<RefundResponse> CreateRefund(string orderId, long amount, long transId, string? description)
@@ -146,7 +172,12 @@ public class MoMoService : IMoMoService
         request.Description = description ?? "";
         var signatureString = $"accessKey={accessKey}&amount={request.Amount}&description={request.Description}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}&transId={request.TransId}";
         request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
-        var paymentResponse = await _httpClient.Post<RefundResponse>(RefundUrl,request);
+        return await CreateRefund(request);
+    }
+
+    public async Task<QueryRefundResponse> QueryRefund(QueryRefundRequest request)
+    {
+        var paymentResponse = await _httpClient.Post<QueryRefundResponse>(QueryRefundUrl,request);
         return paymentResponse;
     }
 
@@ -165,8 +196,7 @@ public class MoMoService : IMoMoService
         };
         var signatureString = $"accessKey={accessKey}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}";
         request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
-        var paymentResponse = await _httpClient.Post<QueryRefundResponse>(QueryRefundUrl,request);
-        return paymentResponse;
+        return await QueryRefund(request);
     }
 
     public bool CheckRedirectUrl(RedirectQuery query)
