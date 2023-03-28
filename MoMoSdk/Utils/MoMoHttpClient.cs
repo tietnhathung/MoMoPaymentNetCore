@@ -37,7 +37,7 @@ public class MoMoHttpClient:IMoMoHttpClient
         _logger.LogInformation("MoMoHttpClient.Post requestUri:{} PaymentResponse:{}",requestUri,stringContent);
         if (response.IsSuccessStatusCode)
         {
-            return JsonSerializer.Deserialize<T>(stringContent,_serializeOptions) ?? throw new Exception("Không thể convert body");
+            return JsonSerializer.Deserialize<T>(stringContent,_serializeOptions)!;
         }
         throw new Exception("Có lỗi trong quá trình xử lý");
     }

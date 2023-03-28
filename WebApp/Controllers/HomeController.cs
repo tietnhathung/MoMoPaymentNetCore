@@ -2,9 +2,11 @@
 using System.Diagnostics;
 using MoMoSdk.Enums;
 using MoMoSdk.Models;
+using MoMoSdk.Models.Create;
 using MoMoSdk.Models.Query;
 using MoMoSdk.Models.Refund;
 using MoMoSdk.Services;
+using MoMoSdk.Utils;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -43,7 +45,7 @@ namespace WebApp.Controllers
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel model)
         {
             
-            PaymentResponse paymentResponse = await _momoService.CreatePayment( model.RequestType,model.OrderId,model.Amount,model.OrderInfo,null,null,model.DeliveryInfo,model.UserInfo);
+            PaymentResponse paymentResponse = await _momoService.CreatePayment( model.RequestType,model.OrderId,model.Amount,model.OrderInfo,MoMoCodeHelper.Base64Encode("{}"),new List<Item>(),model.DeliveryInfo,model.UserInfo);
             if ( paymentResponse.ResultCode == MoMoResultCode.Successful)
             {
                 return Redirect(paymentResponse.PayUrl);

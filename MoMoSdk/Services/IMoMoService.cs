@@ -14,7 +14,9 @@ namespace MoMoSdk.Services;
 
 public interface IMoMoService
 {
-    Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo);
+    Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo);
+    Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,string extraData,List<Item> items,DeliveryInfo deliveryInfo,UserInfo userInfo);
+    Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,string? extraData,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo,long? orderGroupId);
     Task<QueryResponse> QueryPayment(string orderId);
     
     Task<ConfirmResponse> ConfirmPayment(string orderId,ConfirmRequestType requestType,long amount,string? description);
@@ -42,7 +44,17 @@ public class MoMoService : IMoMoService
         _configuration = configuration.GetSection("MoMoPayment");
     }
 
-    private PaymentRequest CreatePaymentRequest(MoMoRequestType requestType,string orderId,long amount,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo)
+    public Task<PaymentResponse> CreatePayment(MoMoRequestType requestType, string orderId, long amount, string orderInfo)
+    {
+        return CreatePayment(requestType, orderId, amount, orderInfo, null, null, null, null, null);
+    }
+
+    public Task<PaymentResponse> CreatePayment(MoMoRequestType requestType, string orderId, long amount, string orderInfo, string extraData, List<Item> items, DeliveryInfo deliveryInfo, UserInfo userInfo)
+    {
+        return CreatePayment(requestType, orderId, amount, orderInfo, extraData, items, deliveryInfo, userInfo, null);
+    }
+
+    public async Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,string? extraData,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo,long? orderGroupId)
     {
         var partnerCode = _configuration["PartnerCode"] ?? "";
         var partnerName = _configuration["PartnerName"] ?? "";
@@ -55,7 +67,7 @@ public class MoMoService : IMoMoService
         var request = new PaymentRequest
         {
             Amount = amount,
-            ExtraData = "",
+            ExtraData = extraData ?? "",
             IpnUrl = ipnUrl,
             OrderId = orderId,
             OrderInfo = orderInfo,
@@ -65,19 +77,15 @@ public class MoMoService : IMoMoService
             RequestType = requestType,
             PartnerName = partnerName,
             StoreId = storeId,
+            DeliveryInfo = deliveryInfo,
+            UserInfo = userInfo,
             OrderGroupId = orderGroupId,
             Items = items,
             Lang = MoMoLang.vi
         };
         var signatureString = $"accessKey={accessKey}&amount={request.Amount}&extraData={request.ExtraData}&ipnUrl={request.IpnUrl}&orderId={request.OrderId}&orderInfo={request.OrderInfo}&partnerCode={request.PartnerCode}&redirectUrl={request.RedirectUrl}&requestId={request.RequestId}&requestType={request.RequestType}";
-        request.Signature = HmacHelper.Compute(secretKey,signatureString);
-        return request;
-    }
-
-    public async Task<PaymentResponse> CreatePayment(MoMoRequestType requestType,string orderId,long amount,string orderInfo,long? orderGroupId,List<Item>? items,DeliveryInfo? deliveryInfo,UserInfo? userInfo)
-    {
-        var paymentRequest = CreatePaymentRequest(requestType,  orderId, amount, orderInfo, orderGroupId, items, deliveryInfo, userInfo);
-        var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,paymentRequest);
+        request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
+        var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,request);
         return paymentResponse;
     }
 
@@ -95,7 +103,7 @@ public class MoMoService : IMoMoService
             RequestId = requestGuiId.ToString()
         };
         var signatureString = $"accessKey={accessKey}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}";
-        request.Signature = HmacHelper.Compute(secretKey,signatureString);
+        request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
         var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
         return paymentResponse;
     }
@@ -117,7 +125,7 @@ public class MoMoService : IMoMoService
             Description = description ?? ""
         };
         var signatureString = $"accessKey={accessKey}&amount={request.Amount}&description={request.Description}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}&requestType={request.RequestType}";
-        request.Signature = HmacHelper.Compute(secretKey,signatureString);
+        request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
         var confirmResponse = await _httpClient.Post<ConfirmResponse>(ConfirmUrl,request);
         return confirmResponse;
     }
@@ -137,7 +145,7 @@ public class MoMoService : IMoMoService
         request.Lang = MoMoLang.vi;
         request.Description = description ?? "";
         var signatureString = $"accessKey={accessKey}&amount={request.Amount}&description={request.Description}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}&transId={request.TransId}";
-        request.Signature = HmacHelper.Compute(secretKey,signatureString);
+        request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
         var paymentResponse = await _httpClient.Post<RefundResponse>(RefundUrl,request);
         return paymentResponse;
     }
@@ -156,7 +164,7 @@ public class MoMoService : IMoMoService
             RequestId = requestGuiId.ToString()
         };
         var signatureString = $"accessKey={accessKey}&orderId={request.OrderId}&partnerCode={request.PartnerCode}&requestId={request.RequestId}";
-        request.Signature = HmacHelper.Compute(secretKey,signatureString);
+        request.Signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
         var paymentResponse = await _httpClient.Post<QueryRefundResponse>(QueryRefundUrl,request);
         return paymentResponse;
     }
@@ -167,7 +175,7 @@ public class MoMoService : IMoMoService
         var accessKey = _configuration["AccessKey"] ?? "";
         
         var signatureString = $"accessKey={accessKey}&amount={query.Amount}&extraData={query.ExtraData}&message={query.Message}&orderId={query.OrderId}&orderInfo={query.OrderInfo}&orderType={query.OrderType}&partnerCode={query.PartnerCode}&payType={query.PayType}&requestId={query.RequestId}&responseTime={query.ResponseTime}&resultCode={((int)query.ResultCode)}&transId={query.TransId}";
-        var signature = HmacHelper.Compute(secretKey,signatureString);
+        var signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
 
         return signature.Equals(query.Signature);
     }
@@ -178,7 +186,7 @@ public class MoMoService : IMoMoService
         var accessKey = _configuration["AccessKey"] ?? "";
         
         var signatureString = $"accessKey={accessKey}&amount={model.Amount}&extraData={model.ExtraData}&message={model.Message}&orderId={model.OrderId}&orderInfo={model.OrderInfo}&orderType={model.OrderType}&partnerCode={model.PartnerCode}&payType={model.PayType}&requestId={model.RequestId}&responseTime={model.ResponseTime}&resultCode={((int)model.ResultCode)}&transId={model.TransId}";
-        var signature = HmacHelper.Compute(secretKey,signatureString);
+        var signature = MoMoCodeHelper.Hmac(secretKey,signatureString);
 
         return signature.Equals(model.Signature);
     }
