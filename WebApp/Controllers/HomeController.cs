@@ -4,6 +4,7 @@ using MoMoSdk.Enums;
 using MoMoSdk.Models;
 using MoMoSdk.Models.Create;
 using MoMoSdk.Models.Query;
+using MoMoSdk.Models.QueryRefund;
 using MoMoSdk.Models.Refund;
 using MoMoSdk.Services;
 using MoMoSdk.Utils;
@@ -85,7 +86,15 @@ namespace WebApp.Controllers
 
             return Error();
         }
-
+        public async Task<IActionResult> QueryReFund(string? orderId)
+        {
+            var queryRefundResponse = new QueryRefundResponse();
+            if (orderId != null)
+            {
+                queryRefundResponse = await _momoService.QueryRefund(orderId);
+            }
+            return View(queryRefundResponse);
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
