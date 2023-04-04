@@ -30,11 +30,11 @@ public class MoMoHttpClient:IMoMoHttpClient
     public async Task<T> Post<T>(string requestUri,object dataObject)
     {
         var jsonString = JsonSerializer.Serialize(dataObject, _serializeOptions);
-        _logger.LogInformation("MoMoHttpClient.Post requestUri:{} paymentRequest:{}",requestUri,jsonString);
+        _logger.LogInformation("MoMoHttpClient.Post requestUri:{RequestUri} paymentRequest:{JsonString}", requestUri,jsonString);
         var body = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json);
         var response  = await _httpClient.PostAsync(requestUri, body);
         var stringContent = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation("MoMoHttpClient.Post requestUri:{} PaymentResponse:{}",requestUri,stringContent);
+        _logger.LogInformation("MoMoHttpClient.Post requestUri:{RequestUri} PaymentResponse:{StringContent}", requestUri,stringContent);
         if (response.IsSuccessStatusCode)
         {
             return JsonSerializer.Deserialize<T>(stringContent,_serializeOptions)!;

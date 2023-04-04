@@ -1,10 +1,13 @@
 
 using MoMoSdk;
+using WebApp.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMoMoSdk();
+builder.Services.AddHostedService<BaseBackgroundService>();
 
 var app = builder.Build();
 
