@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Policy;
 using MoMoSdk.Enums;
 using MoMoSdk.Models;
 using MoMoSdk.Models.Create;
@@ -45,7 +46,6 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel model)
         {
-            
             PaymentResponse paymentResponse = await _momoService.CreatePayment( model.RequestType,model.OrderId,model.Amount,model.OrderInfo,MoMoCodeHelper.Base64Encode("{}"),new List<Item>(),model.DeliveryInfo,model.UserInfo);
             if ( paymentResponse.ResultCode == MoMoResultCode.Successful)
             {
