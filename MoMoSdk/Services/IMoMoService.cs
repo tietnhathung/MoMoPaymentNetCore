@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MoMoSdk.Enums;
+using MoMoSdk.Exceptions;
 using MoMoSdk.Models;
 using MoMoSdk.Models.Confirm;
 using MoMoSdk.Models.Create;
@@ -51,8 +52,15 @@ public class MoMoService : IMoMoService
 
     public async Task<PaymentResponse> CreatePayment(PaymentRequest request)
     {
-        var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,request);
-        return paymentResponse;
+        try
+        {
+            var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,request);
+            return paymentResponse;
+        }
+        catch (Exception e)
+        {
+            throw new MoMoException(e.Message,e);
+        }
     }
 
     public Task<PaymentResponse> CreatePayment(MoMoRequestType requestType, string orderId, long amount, string orderInfo)
@@ -101,8 +109,15 @@ public class MoMoService : IMoMoService
 
     public async Task<QueryResponse> QueryPayment(QueryRequest request)
     {
-        var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
-        return paymentResponse;
+        try
+        {
+            var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
+            return paymentResponse;
+        }
+        catch (Exception e)
+        {
+            throw new MoMoException(e.Message,e);
+        }
     }
 
     public async Task<QueryResponse> QueryPayment(string orderId)
@@ -125,8 +140,15 @@ public class MoMoService : IMoMoService
 
     public async Task<ConfirmResponse> ConfirmPayment(ConfirmRequest request)
     {
-        var confirmResponse = await _httpClient.Post<ConfirmResponse>(ConfirmUrl,request);
-        return confirmResponse;
+        try
+        {
+            var confirmResponse = await _httpClient.Post<ConfirmResponse>(ConfirmUrl,request);
+            return confirmResponse;
+        }
+        catch (Exception e)
+        {
+            throw new MoMoException(e.Message,e);
+        }
     }
 
     public async Task<ConfirmResponse> ConfirmPayment(string orderId, ConfirmRequestType requestType, long amount,string? description)
@@ -152,8 +174,16 @@ public class MoMoService : IMoMoService
 
     public async Task<RefundResponse> CreateRefund(RefundRequest request)
     {
-        var paymentResponse = await _httpClient.Post<RefundResponse>(RefundUrl,request);
-        return paymentResponse;
+        try
+        {
+            var paymentResponse = await _httpClient.Post<RefundResponse>(RefundUrl,request);
+            return paymentResponse;
+        }
+        catch (Exception e)
+        {
+            throw new MoMoException(e.Message,e);
+        }
+        
     }
 
     public async Task<RefundResponse> CreateRefund(string orderId, long amount, long transId, string? description)
@@ -177,8 +207,15 @@ public class MoMoService : IMoMoService
 
     public async Task<QueryRefundResponse> QueryRefund(QueryRefundRequest request)
     {
-        var paymentResponse = await _httpClient.Post<QueryRefundResponse>(QueryRefundUrl,request);
-        return paymentResponse;
+        try
+        {
+            var paymentResponse = await _httpClient.Post<QueryRefundResponse>(QueryRefundUrl,request);
+            return paymentResponse;
+        }
+        catch (Exception e)
+        {
+            throw new MoMoException(e.Message,e);
+        }
     }
 
     public async Task<QueryRefundResponse> QueryRefund(string orderId)
