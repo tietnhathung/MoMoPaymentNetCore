@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MoMoSdk.Exceptions;
 
 namespace MoMoSdk.Utils;
 
@@ -29,16 +30,21 @@ public class MoMoHttpClient:IMoMoHttpClient
 
     public async Task<T> Post<T>(string requestUri,object dataObject)
     {
-        var jsonString = JsonSerializer.Serialize(dataObject, _serializeOptions);
-        _logger.LogInformation("MoMoHttpClient.Post requestUri:{RequestUri} paymentRequest:{JsonString}", requestUri,jsonString);
-        var body = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json);
-        var response  = await _httpClient.PostAsync(requestUri, body);
-        var stringContent = await response.Content.ReadAsStringAsync();
-        _logger.LogInformation("MoMoHttpClient.Post requestUri:{RequestUri} PaymentResponse:{StringContent}", requestUri,stringContent);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            return JsonSerializer.Deserialize<T>(stringContent,_serializeOptions)!;
+            var jsonString = JsonSerializer.Serialize(dataObject, _serializeOptions);
+            _logger.LogInformation("MoMoHttpClient.Post requestUri:{RequestUri} paymentRequest:{JsonString}", requestUri,jsonString);
+            var body = new StringContent(jsonString, Encoding.UTF8, MediaTypeNames.Application.Json);
+            var response  = await _httpClient.PostAsync(requestUri, body);
+            var stringContent = await response.Content.ReadAsStringAsync();
+            _logger.LogInformation("MoMoHttpClient.Post requestUri:{RequestUri} PaymentResponse:{StringContent}", requestUri,stringContent);
+            var content = JsonSerializer.Deserialize<T>(stringContent, _serializeOptions)!;
+            return content;
         }
-        throw new Exception("Có lỗi trong quá trình xử lý");
+        catch (Exception e)
+        {
+            _logger.LogError("Http.Post ERROR {Message}",e.Message);
+            throw;
+        }
     }
 }

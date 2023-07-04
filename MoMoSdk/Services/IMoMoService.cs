@@ -55,6 +55,10 @@ public class MoMoService : IMoMoService
         try
         {
             var paymentResponse = await _httpClient.Post<PaymentResponse>(CreateUrl,request);
+            if (paymentResponse.ResultCode != MoMoResultCode.Successful)
+            {
+                throw new MoMoException(paymentResponse.Message,paymentResponse);
+            }
             return paymentResponse;
         }
         catch (Exception e)
@@ -112,6 +116,10 @@ public class MoMoService : IMoMoService
         try
         {
             var paymentResponse = await _httpClient.Post<QueryResponse>(QueryUrl,request);
+            if (paymentResponse.ResultCode != MoMoResultCode.Successful)
+            {
+                throw new MoMoException(paymentResponse.Message,paymentResponse);
+            }
             return paymentResponse;
         }
         catch (Exception e)
@@ -143,6 +151,10 @@ public class MoMoService : IMoMoService
         try
         {
             var confirmResponse = await _httpClient.Post<ConfirmResponse>(ConfirmUrl,request);
+            if (confirmResponse.ResultCode != MoMoResultCode.Successful)
+            {
+                throw new MoMoException(confirmResponse.Message,confirmResponse);
+            }
             return confirmResponse;
         }
         catch (Exception e)
@@ -177,6 +189,11 @@ public class MoMoService : IMoMoService
         try
         {
             var paymentResponse = await _httpClient.Post<RefundResponse>(RefundUrl,request);
+            if (paymentResponse.ResultCode != MoMoResultCode.Successful)
+            {
+                throw new MoMoException(paymentResponse.Message,paymentResponse);
+            }
+
             return paymentResponse;
         }
         catch (Exception e)
@@ -210,6 +227,10 @@ public class MoMoService : IMoMoService
         try
         {
             var paymentResponse = await _httpClient.Post<QueryRefundResponse>(QueryRefundUrl,request);
+            if (paymentResponse.ResultCode != MoMoResultCode.Successful)
+            {
+                throw new MoMoException(paymentResponse.Message,paymentResponse);
+            }
             return paymentResponse;
         }
         catch (Exception e)
