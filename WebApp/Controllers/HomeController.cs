@@ -46,20 +46,12 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromForm] CreateOrderViewModel model)
         {
-            try
+            PaymentResponse paymentResponse = await _momoService.CreatePayment( model.RequestType,model.OrderId,model.Amount,model.OrderInfo,MoMoCodeHelper.Base64Encode("{}"),new List<Item>(),model.DeliveryInfo,model.UserInfo);
+            if ( paymentResponse.ResultCode == MoMoResultCode.Successful)
             {
-                PaymentResponse paymentResponse = await _momoService.CreatePayment( model.RequestType,model.OrderId,model.Amount,model.OrderInfo,MoMoCodeHelper.Base64Encode("{}"),new List<Item>(),model.DeliveryInfo,model.UserInfo);
-                if ( paymentResponse.ResultCode == MoMoResultCode.Successful)
-                {
-                    return Redirect(paymentResponse.PayUrl);
-                }
-                return View(model);
+                return Redirect(paymentResponse.PayUrl);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            return View(model);
         }
 
         public async Task<IActionResult> QueryOrder(string? orderId)
@@ -91,7 +83,6 @@ namespace WebApp.Controllers
             {
                 return View(paymentResponse);
             }
-
             return Error();
         }
         public async Task<IActionResult> QueryReFund(string? orderId)
